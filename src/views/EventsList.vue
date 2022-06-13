@@ -2,14 +2,15 @@
   <div class="container">
     <h1>This is Events List page</h1>
     <nav>    
-      <ul>        
+      <ul>            
         <router-link v-for="item of DataList.events" :key="item.id" 
             :to="{name: 'event-item', 
-            params: {id: item.id, item: item}}">
+            params: {id: String(item.id), item: item}}">
           Event Item #{{item.id}}
-        </router-link>            
-      </ul>      
+        </router-link>         
+      </ul>           
       <router-view/>
+      
     </nav>
   </div>
 </template>

@@ -1,6 +1,7 @@
 <template>
-  <div class="container">
-     <form>
+
+  <div class="container">         
+     <form>        
         <div class="input__wrapper">
           <label>Event ID: </label>
           <input type="text" :value="item.id">
@@ -33,21 +34,30 @@
           <label>Category: </label>
           <input type="text" :value="item.category">
         </div>
-        
+<!--        
         <div class="attendees__wrapper">
           <p class="attendees__title">Attendees:</p>          
           <p v-for="subitem of item.attendees" :key="subitem.id"> <span> ID: </span> {{subitem.id}} <span>,  name: </span> {{subitem.name}}</p>
+        </div>      
+-->
+        <p class="attendees__title">Attendees:</p>          
+        <div class="attendees__wrapper" v-for="subitem of item.attendees" :key="subitem.id">
+          <label>ID: </label>
+          <input type="text" :value="subitem.id">          
+          <label>name: </label>
+          <input type="text" :value="subitem.name">                    
         </div>      
      </form>        
   </div>
 </template>
 
 <script>
-    export default {      
+    export default {                    
         props: {
-          id: Number,          
-          item: Object
-        }        
+          id: String,          
+          item: Object          
+        },  
+
     }
 </script>
 
@@ -81,11 +91,16 @@
     .attendees__wrapper{
       font-size: 20px;
       margin-left: 20px;      
+      display: flex;
+    }
+    .attendees__wrapper label{
+      margin-left: 10px;
     }
     .attendees__title {
         font-weight: 700;
       }
-    p span{
+    p {
+      font-size: 20px;
       font-weight: 700;
     }  
 </style>
