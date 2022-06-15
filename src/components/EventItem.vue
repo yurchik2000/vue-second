@@ -1,38 +1,37 @@
 <template>
-
   <div class="container">         
      <form>        
         <div class="input__wrapper">
           <label>Event ID: </label>
-          <input type="text" :value="item.id">
+          <input type="text" :value="item.id" readonly>
         </div>
         <div class="input__wrapper">
           <label>Title name: </label>
-          <input type="text" :value="item.title">
+          <input type="text" :value="item.title" readonly>
         </div>
         <div class="input__wrapper">
           <label>Date: </label>
-          <input type="text" :value="item.date">
+          <input type="text" :value="item.date" readonly>
         </div>
         <div class="input__wrapper">
           <label>Time: </label>
-          <input type="text" :value="item.time">
+          <input type="text" :value="item.time" readonly>
         </div>
         <div class="input__wrapper">
           <label>Location: </label>
-          <input type="text" :value="item.location">
+          <input type="text" :value="item.location" readonly>
         </div>
         <div class="input__wrapper">
           <label>Description: </label>
-          <input type="text" :value="item.description">
+          <input type="text" :value="item.description" readonly>
         </div>
         <div class="input__wrapper">
           <label>Organizer: </label>
-          <input type="text" :value="item.organizer">
+          <input type="text" :value="item.organizer" readonly>
         </div>
         <div class="input__wrapper">
           <label>Category: </label>
-          <input type="text" :value="item.category">
+          <input type="text" :value="item.category" readonly>
         </div>
 <!--        
         <div class="attendees__wrapper">
@@ -43,9 +42,9 @@
         <p class="attendees__title">Attendees:</p>          
         <div class="attendees__wrapper" v-for="subitem of item.attendees" :key="subitem.id">
           <label>ID: </label>
-          <input type="text" :value="subitem.id">          
+          <input type="text" :value="subitem.id" readonly>          
           <label>name: </label>
-          <input type="text" :value="subitem.name">                    
+          <input type="text" :value="subitem.name" readonly>                    
         </div>      
      </form>        
   </div>
@@ -55,9 +54,8 @@
     export default {                    
         props: {
           id: String,          
-          item: Object          
+          item: Object,                    
         },  
-
     }
 </script>
 
