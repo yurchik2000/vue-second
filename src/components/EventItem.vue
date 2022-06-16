@@ -40,13 +40,13 @@
         </div>      
 -->
         <p class="attendees__title">Attendees:</p>          
-        <div class="attendees__wrapper" v-for="subitem of item.attendees" :key="subitem.id">
+        <div class="attendees__wrapper" v-for="attendee of item.attendees" :key="attendee.id">
           <label>ID: </label>
-          <input type="text" :value="subitem.id" readonly>          
+          <input type="text" :value="attendee.id" readonly>          
           <label>name: </label>
-          <input type="text" :value="subitem.name" readonly>                    
+          <input type="text" :value="attendee.name" readonly>                    
         </div>      
-     </form>        
+     </form>             
   </div>
 </template>
 

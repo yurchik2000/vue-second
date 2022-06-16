@@ -11,19 +11,17 @@
             </router-link>         
             <button @click="removeItem(item)"> X </button>
         </li>
-      </ul>                       
-      <router-view/>            
+      </ul>      
+      <router-view/>                  
     </nav>
   </div>
 </template>
 
 <script>
     //import DataList from '../../db.json'
-    import store from '@/vuex/store'
-    import {mapMutations} from 'vuex'
-
-    
-    
+    // import store from '@/vuex/store'
+    import {mapMutations, mapState} from 'vuex'
+      
     export default {
         data(){
             return {
@@ -32,17 +30,19 @@
             }
         },
         computed: {
-          DataList () {            
-            return store.state.events
+          ...mapState(['events']),
+          DataList () {                                    
+            return this.events
           }                    
         },
         created () {
-          store.dispatch('fetchProducts')
+          this.$store.dispatch('fetchProducts')
         },
         methods: {
           ...mapMutations (['REMOVE_ITEM']),
           removeItem(item) {
-            this.$store.commit('REMOVE_ITEM', item);
+            this.REMOVE_ITEM(item)
+            //this.$store.commit('REMOVE_ITEM', item);
           }
         }        
     }

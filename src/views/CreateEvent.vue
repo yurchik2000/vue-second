@@ -4,7 +4,7 @@
     <form>        
         <div class="input__wrapper">
           <label>Event ID: </label>
-          <input type="text" v-model="item.id">
+          <input type="text" v-model="item.id" readonly placeholder="* * * *">
         </div>
         <div class="input__wrapper">
           <label>Title name: </label>
@@ -35,46 +35,68 @@
           <input type="text" v-model="item.category">
         </div>
         <p class="attendees__title">Attendees:</p>                                          
-        <div class="attendees__wrapper" v-for="subitem of item.attendees" :key="subitem.id">
+        <div class="attendees__wrapper" v-for="attendee of item.attendees" :key="attendee.id">
           <label>ID: </label>
-          <input type="text" v-model="subitem.id">
+          <input type="text" v-model="attendee.id" readonly>
           <label>name: </label>
-          <input type="text" v-model="subitem.name">                              
+          <input type="text" v-model="attendee.name">                              
         </div>                        
         <div class="attendees__btn" @click="addNewAttendees">Add new Attendees</div>
      </form>            
-     <button @click="addItem(item)">Save Event</button>     
+     <button @click="addEvent">Save Event</button>          
   </div>
 </template>
 
 <script>  
 
-  import {mapMutations} from 'vuex'
+  import store from '@/vuex/store'
+  import {mapActions} from 'vuex'
 
   export default {
     
     data() {
       return {      
-        id: '',
-        item: {                    
-          attendees: []          
-          },        
+          item: this.generateNewEventObject()
         }        
-      },
-    components: {
-      
-    },
-    methods: {
-          ...mapMutations (['ADD_ITEM']),
-          addItem(item) {
-            this.$store.commit('ADD_ITEM', item);
-          },                              
+      },    
+    created () {
+          store.dispatch('fetchProducts')
+        },  
+    methods: {      
+          ...mapActions (['createEvent']),
+                    
           addNewAttendees(){
             this.item.attendees.push({
-              id: '',
+              id: this.generateId(),
               name: ''
             })            
-          }
+          },
+          generateId() {
+            return Math.floor(Math.random()*1000000)
+          },
+          generateNewEventObject() {
+            const id = this.generateId();            
+            return {
+              id: id,
+              user: '',
+              category: '',
+              organizer: '',
+              title: '',
+              description: '',
+              location: '',
+              date: '',
+              time: '',
+              attendees: []
+            }
+          },
+          async addEvent(){
+            try {              
+              this.createEvent(this.item);
+              this.item = this.generateNewEventObject();
+            } catch(error) {
+              console.error(error);
+            }
+          }          
     },          
   }
 </script>
