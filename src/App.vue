@@ -3,7 +3,8 @@
     <nav>
       <router-link to="/">Home</router-link> |
       <router-link to="/events">Events List</router-link> |
-      <router-link to="/create">Create Event</router-link>
+      <router-link to="/create">Create Event</router-link> |
+      <router-link to="/edit">Edit Event</router-link>
     </nav>
     <router-view/>
   </div>

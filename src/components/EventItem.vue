@@ -62,7 +62,7 @@
 <style scoped>
     .container{
         padding: 10px;
-        margin: o auto;
+        margin: 0 auto;
         background: #eeeeee;
         text-align: left;
     }

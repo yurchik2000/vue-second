@@ -1,28 +1,50 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import axios from 'axios';
 
-import DataList from '../../db.json';
+
+// import DataList from '../../db.json';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {            //data
-    events: []
-  },
-
-  actions: {
-    fetchProducts (context){
-      // make tha call            
-      context.commit('setEvents', DataList.events)
-    },
+    events: [],
+    loading: true,
+    perPage: 5,
+    page: 1,
+  },  
+  actions: {    
     createEvent({commit}, event) {
-      commit('ADD_ITEM', event)
-    },
+      commit('ADD_ITEM', event)      
+    },    
+    GET_FROM_API({commit}){            
+      return axios 
+      .get('http://localhost:3000/events')
+      //.get('http://localhost:3000/events?_limit=' + 5 + '&_page=' + 1)      
+      .then (response => {
+        this.loading = true
+        commit("SET_TO_STATE", response.data)
+        return response.data
+        })
+      .catch((error) => {
+        console.log(error)
+        return error
+       })
+       .finally(() => {        
+        this.loading = false
+        commit("SET_LOADING", this.loading)
+        return this.loading
+        }        
+       )
+    }
   },
-
   mutations: {
     setEvents(state, events) {
       state.events = events;
+    },
+    setPage(state, page){
+      state.page = page;
     },
     REMOVE_ITEM(state, item) {
       state.events = state.events.filter(event => event.id !== item.id)
@@ -30,6 +52,21 @@ export default new Vuex.Store({
     ADD_ITEM (state, item) {
       // можна перевірити чи Item  з таким ID вже є в списку      
       return state.events.push(item)      
-    }
-  }
+    },
+    SET_TO_STATE: (state, events) => {
+      state.events = events      
+    },
+    SET_LOADING: (state, loading) =>{
+      state.loading = loading
+    },
+    REPLACE_EVENT (state, item) {
+      console.log(item)
+      state.item = item
+    },    
+  },
+  // getters: {
+  //   EVENTS(state) {
+  //     return state.events
+  //   }
+  // }
 })

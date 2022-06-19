@@ -43,25 +43,27 @@
         </div>                        
         <div class="attendees__btn" @click="addNewAttendees">Add new Attendees</div>
      </form>            
-     <button @click="addEvent">Save Event</button>          
+     <button @click="addEvent" >Save Event</button>          
   </div>
 </template>
 
 <script>  
 
-  import store from '@/vuex/store'
+  // import store from '@/vuex/store'
   import {mapActions} from 'vuex'
+  import axios from 'axios';
 
   export default {
     
     data() {
       return {      
-          item: this.generateNewEventObject()
+          item: this.generateNewEventObject(),
+          itemId: 0
         }        
       },    
-    created () {
-          store.dispatch('fetchProducts')
-        },  
+    // created () {
+    //       store.dispatch('fetchProducts')
+    //     },  
     methods: {      
           ...mapActions (['createEvent']),
                     
@@ -89,14 +91,21 @@
               attendees: []
             }
           },
+          postEventToServer(item) {
+            axios.post('http://localhost:3000/events', item)
+              .then(response => this.itemId = response.data.id);              
+          },          
           async addEvent(){
             try {              
               this.createEvent(this.item);
+              this.postEventToServer(this.item)
               this.item = this.generateNewEventObject();
             } catch(error) {
               console.error(error);
             }
-          }          
+          },
+          
+
     },          
   }
 </script>
@@ -104,7 +113,7 @@
 <style scoped>
     .container{
         padding: 10px;
-        margin: o auto;
+        margin: 0 auto;
         background: #eeeeee;
         text-align: left;
     }
