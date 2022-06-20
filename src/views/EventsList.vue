@@ -15,7 +15,9 @@
             <button @click="deleteEventFromServer(item), removeItem(item)"> X </button>
         </li>
       </ul>  
-      <button @click="nextPage"> Next </button>    
+      <button class='btn' v-if="isShowedPrev" @click="prevPage"> Prev </button>    
+      <button class='btn' v-if="isShowedNext" @click="nextPage"> Next </button>          
+      
       <router-view/>                  
     </nav>
   </div>
@@ -31,17 +33,15 @@
         data(){
             return {
                 usersPerPage: 5,
-                pageNumber: 0
+                pageNumber: 0,
+                isShowedPrev:  false,
+                isShowedNext:  true,                
+                allEventsLength: 0
             }
         },
         computed: {
-          ...mapState(['events', 'loading']),                    
-          paginatedUsers() {
-            return {
-              from: 0,
-              to: this.from + this.usersPerPage
-            }            
-          }
+          ...mapState(['events', 'loading', 'page', 'perPage']),                              
+          
         },
         methods: {
           ...mapActions([ 'GET_FROM_API']),    
@@ -50,17 +50,42 @@
               .then(() => console.log('Delete successful'))
               .catch(error => console.log(error))
           },
-          ...mapMutations (['REMOVE_ITEM']),          
+          ...mapMutations (['REMOVE_ITEM', 'MOVE_TO_NEXT_PAGE', 'MOVE_TO_PREV_PAGE']),          
           removeItem(item) {            
             this.REMOVE_ITEM(item)            
           },          
-          nextPage(){
-            this.paginatedUsers.from = this.paginatedUsers.from + this.usersPerPage
-            console.log(this.paginatedUsers.from)
+          nextPage(){            
+            this.MOVE_TO_NEXT_PAGE(this.page)
+            this.GET_FROM_API()            
+            if (this.page > 1) this.isShowedPrev = true
+            if (this.page <= 1) this.isShowedPrev = false            
+            if (this.page >= Math.ceil(this.allEventsLength / this.perPage)) this.isShowedNext = false; 
+              else this.isShowedNext = true;                
+          },
+          prevPage(){
+            this.MOVE_TO_PREV_PAGE(this.page)
+            this.GET_FROM_API()
+            if (this.page > 1) this.isShowedPrev = true
+            if (this.page <= 1) this.isShowedPrev = false
+            if (this.page >= Math.ceil(this.allEventsLength / this.perPage)) this.isShowedNext = false; 
+              else this.isShowedNext = true;                
+          },
+          getAllEventsLength(){            
+            return axios 
+              .get('http://localhost:3000/events')                
+                .then (response => {                                                            
+                this.allEventsLength = response.data.length
+                return response.data.length
+              })
+              .catch((error) => {
+                console.log(error)
+              return error
+              })                        
           }
         },
         mounted() {
            this.GET_FROM_API()
+           this.getAllEventsLength()
   }        
     }
 </script>
@@ -98,5 +123,16 @@
     .loader img {
       width: 100%;
       object-fit: cover;      
+    }
+    .btn{
+      font-size: 20px;
+      font-weight: 700;
+      padding: 10px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      text-align: center;
+      background: #fafafa;
+      border: 2px solid #101010;
     }
 </style>

@@ -20,8 +20,27 @@ export default new Vuex.Store({
     },    
     GET_FROM_API({commit}){            
       return axios 
-      .get('http://localhost:3000/events')
-      //.get('http://localhost:3000/events?_limit=' + 5 + '&_page=' + 1)      
+      //.get('http://localhost:3000/events')
+      .get('http://localhost:3000/events?_limit=' + this.state.perPage + '&_page=' + this.state.page)      
+      .then (response => {
+        this.loading = true
+        commit("SET_TO_STATE", response.data)
+        return response.data
+        })
+      .catch((error) => {
+        console.log(error)
+        return error
+       })
+       .finally(() => {        
+        this.loading = false
+        commit("SET_LOADING", this.loading)
+        return this.loading
+        }        
+       )
+    },
+    GET_ALL_FROM_API({commit}){            
+      return axios 
+      .get('http://localhost:3000/events')      
       .then (response => {
         this.loading = true
         commit("SET_TO_STATE", response.data)
@@ -62,7 +81,13 @@ export default new Vuex.Store({
     REPLACE_EVENT (state, item) {
       console.log(item)
       state.item = item
-    },    
+    },
+    MOVE_TO_NEXT_PAGE (state, page){
+      state.page = page + 1      
+    },
+    MOVE_TO_PREV_PAGE (state, page){
+      state.page = page - 1      
+    }        
   },
   // getters: {
   //   EVENTS(state) {
