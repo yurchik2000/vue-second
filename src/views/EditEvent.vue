@@ -18,38 +18,37 @@
 </template>
 
 <script>
-
-import { mapState} from "vuex";
-import PopUp from "@/components/PopUp"
-    import {mapActions} from 'vuex'
+import { mapState } from "vuex";
+import PopUp from "@/components/PopUp";
+import { mapActions } from "vuex";
 
 export default {
   data() {
     return {
       isPopUpVisible: false,
-      item: {}
-    }
+      item: {},
+    };
   },
   components: {
-    PopUp
+    PopUp,
   },
   computed: {
     ...mapState(["events"]),
   },
   methods: {
-    ...mapActions([ 'GET_ALL_FROM_API']),
-    
-    showPopUp(item){
-      this.item = item
-      this.isPopUpVisible = true
+    ...mapActions(["GET_ALL_FROM_API"]),
+
+    showPopUp(item) {
+      this.item = item;
+      this.isPopUpVisible = true;
     },
-    closePopUp(){
-      this.isPopUpVisible = false
-    },    
+    closePopUp() {
+      this.isPopUpVisible = false;
+    },
   },
   mounted() {
-    this.GET_ALL_FROM_API()
-  }
+    this.GET_ALL_FROM_API();
+  },
 };
 </script>
 

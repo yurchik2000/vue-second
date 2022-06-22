@@ -4,14 +4,12 @@
   </div>
 </template>
 
-<script>
-    
-</script>
+<script></script>
 
 <style scoped>
-    .container{
-        padding: 10px;
-        margin: o auto;
-        background: #e1e1e1;
-    }    
+.container {
+  padding: 10px;
+  margin: o auto;
+  background: #e1e1e1;
+}
 </style>

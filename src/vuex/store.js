@@ -89,9 +89,5 @@ export default new Vuex.Store({
       state.page = page - 1      
     }        
   },
-  // getters: {
-  //   EVENTS(state) {
-  //     return state.events
-  //   }
-  // }
+
 })
