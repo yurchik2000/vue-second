@@ -1,7 +1,6 @@
 <template>
-  <div class="container">
-    <h1>This is Create Event page</h1>
-    <form @mousemove="toHide">
+  <div class="popup" @mousemove="toHide">
+    <form>
       <div class="input__wrapper">
         <label>Event ID: </label>
         <input type="text" v-model="item.id" readonly />
@@ -20,7 +19,7 @@
       </div>
       <div class="input__wrapper">
         <label>Location: </label>
-        <input type="text" v-model="item.location" />
+        <input type="text" v-model="item.location"/>
       </div>
       <div class="input__wrapper">
         <label>Description: </label>
@@ -32,7 +31,7 @@
       </div>
       <div class="input__wrapper">
         <label>Category: </label>
-        <input type="text" v-model="item.category" />
+        <input type="text" v-model="item.category"  />
       </div>
       <p class="attendees__title">Attendees:</p>
       <div
@@ -43,67 +42,49 @@
         <label>ID: </label>
         <input type="text" v-model="attendee.id" readonly />
         <label>name: </label>
-        <input type="text" v-model="attendee.name" />
-      </div>
-      <div class="attendees__btn" @click="addNewAttendees">
-        Add new Attendees
+        <input type="text" v-model="attendee.name"  />
       </div>
     </form>
     <p class="message" v-if="toShow">Saved successfully</p>
-    <button @click="addEvent">Save Event</button>
+    <footer>
+      <button @click="replaceEvent">Save</button>
+      <button @click="closePopUp">Cancel</button>
+    </footer>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapMutations } from "vuex";
 import axios from "axios";
 
 export default {
+  props: {
+    id: String,
+    newItem: Object,    
+  },
   data() {
     return {
-      item: this.generateNewEventObject(),
-      itemId: 0,
-      toShow: false,
+      item: this.newItem,
+      toShow: false
     };
   },
   methods: {
-    ...mapActions(["createEvent"]),
-
-    addNewAttendees() {
-      this.item.attendees.push({
-        id: this.generateId(),
-        name: "",
-      });
+    ...mapMutations(["REPLACE_EVENT"]),
+    closePopUp() {
+      this.$emit("closePopUp");
     },
-    generateId() {
-      return Math.floor(Math.random() * 1000000);
-    },
-    generateNewEventObject() {
-      const id = this.generateId();
-      return {
-        id: id,
-        user: "",
-        category: "",
-        organizer: "",
-        title: "",
-        description: "",
-        location: "",
-        date: "",
-        time: "",
-        attendees: [],
-      };
-    },
-    postEventToServer(item) {
+    replaceEventOnServer(item) {
       axios
-        .post("http://localhost:3000/events", item)
-        .then((response) => (this.itemId = response.data.id));
+        .put("http://localhost:3000/events/" + item.id, item)
+        .then(() => console.log("Replace successful"))
+        .then(this.toShow = true)
+        .catch((error) => console.log(error));
     },
-    async addEvent() {
+    async replaceEvent() {
       try {
-        this.createEvent(this.item);
-        this.postEventToServer(this.item);
-        this.item = this.generateNewEventObject();
-        this.toShow = true;
+        console.log(this.item);
+        this.REPLACE_EVENT(this.item);
+        this.replaceEventOnServer(this.item);
       } catch (error) {
         console.error(error);
       }
@@ -116,19 +97,22 @@ export default {
 </script>
 
 <style scoped>
-.container {
+.popup {
   padding: 10px;
   margin: 0 auto;
-  background: #eeeeee;
+  background: #d1d1d1;
   text-align: left;
-}
-h1 {
-  text-align: center;
+  position: fixed;
+  top: 100px;
+  left: 0;
+  right: 0;
+  width: 900px;
 }
 form {
   background: #a0a0a0;
   padding: 10px;
   max-width: 800px;
+  margin: 0 auto;
 }
 .input__wrapper {
   margin-bottom: 10px;
@@ -160,13 +144,11 @@ p {
   font-size: 20px;
   font-weight: 700;
 }
-button,
-.attendees__btn {
+button {
   font-size: 20px;
   font-weight: 700;
   padding: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 20px;
   cursor: pointer;
   text-align: center;
   background: #fafafa;
